@@ -41,7 +41,7 @@ attention_probs = Dense(input_dims, activation='softmax', name='attention_probs'
 attention_mul = merge([inputs, attention_probs], output_shape=32, name='attention_mul', mode='mul')
 ```
 
-We apply a `Dense - Softmax` layer with the same number of output parameters than the `Input` layer. The attention matrix has a shape of `input_dims x 32` here.
+We apply a `Dense - Softmax` layer with the same number of output parameters than the `Input` layer. The attention matrix has a shape of `input_dims x input_dims` here.
 
 Then we merge the `Inputs` layer with the attention layer by multiplying element-wise.
 
