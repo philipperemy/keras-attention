@@ -23,6 +23,9 @@ We expect the attention to be focused on *v[1]* only, or at least strongly. We r
   <img src="assets/attention_1.png" width="400">
 </p>
 
+
+The first two are samples taken randomly from the training set. The last plot is the attention vector that we expect. A high peak indexed by 1, and close to zero on the rest.
+
 Let's train this model and visualize the attention vector applied to the inputs:
 
 <p align="center">
