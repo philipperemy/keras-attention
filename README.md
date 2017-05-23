@@ -4,8 +4,8 @@ Simple attention mechanism implemented in Keras. Only 2 lines of code!
 
 ```
 inputs = Input(shape=(input_dims,))
-alpha = Dense(32, activation='softmax', name='alpha')(inputs)
-r = merge([inputs, alpha], output_shape=32, name='r', mode='mul')
+attention_probs = Dense(input_dims, activation='softmax', name='attention_probs')(inputs)
+attention_mul = merge([inputs, attention_probs], output_shape=32, name='attention_mul', mode='mul')
 ```
 
 

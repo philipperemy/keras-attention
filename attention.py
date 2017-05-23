@@ -34,12 +34,12 @@ def build_model():
     inputs = Input(shape=(input_dims,))
 
     # ATTENTION PART STARTS HERE
-    alpha = Dense(32, activation='softmax', name='alpha')(inputs)
-    r = merge([inputs, alpha], output_shape=32, name='r', mode='mul')
+    attention_probs = Dense(input_dims, activation='softmax', name='attention_probs')(inputs)
+    attention_mul = merge([inputs, attention_probs], output_shape=32, name='attention_mul', mode='mul')
     # ATTENTION PART FINISHES HERE
 
-    r = Dense(64)(r)
-    output = Dense(1, activation='sigmoid')(r)
+    attention_mul = Dense(64)(attention_mul)
+    output = Dense(1, activation='sigmoid')(attention_mul)
     model = Model(input=[inputs], output=output)
     return model
 
@@ -51,6 +51,7 @@ if __name__ == '__main__':
         In practice, the network should learn that the target = x[attention_column].
         Therefore, most of its attention should be focused on the value addressed by attention_column.
         :param n: the number of samples to retrieve.
+        :param attention_column: the column linked to the target. Everything else is purely random.
         :return: x: model inputs, y: model targets
         """
         x = np.random.standard_normal(size=(n, input_dims))
