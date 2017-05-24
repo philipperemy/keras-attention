@@ -1,13 +1,16 @@
 # Keras Attention Mechanism (Hello World)
+Simple attention mechanism implemented in Keras for the following layers:
 
-Simple attention mechanism implemented in Keras. Only 2 lines of code!
+- [x] **Dense**
+- [x] **LSTM, GRU**
+
+## Dense Layer
 
 ```
 inputs = Input(shape=(input_dims,))
 attention_probs = Dense(input_dims, activation='softmax', name='attention_probs')(inputs)
 attention_mul = merge([inputs, attention_probs], output_shape=32, name='attention_mul', mode='mul')
 ```
-
 
 Let's consider this Hello World example:
 
@@ -35,7 +38,7 @@ Let's train this model and visualize the attention vector applied to the inputs:
 
 We can clearly see that the network figures this out for the inference.
 
-## Behind the scenes
+### Behind the scenes
 
 The attention mechanism can be implemented in three lines with Keras:
 ```
@@ -55,3 +58,12 @@ attention_vector = get_activations(m, testing_inputs_1, print_shape_only=True)[1
 ```
 
 Where `1` is the index of definition of the attention layer in the model definition (`Inputs` is indexed by `0`).
+
+## Recurrent Layers (LSTM, GRU...)
+
+We consider the same example as the one used for the Dense layers. The attention index is now on the 10th value. We therefore expect an attention spike around this value. There are two main ways to apply attention to recurrent layers:
+
+- Directly at the inputs (same as the Dense example above): `attention_lstm_before.py`
+- After the LSTM layer: `attention_lstm_before.py`
+
+Both have their own advantages and disadvantages. One obvious advantage of applying the attention directly at the inputs is that we clearly understand this space. The high dimensional space spanned by the LSTM might be a bit trickier to interpret, although they share the time steps in common with the inputs (`return_sequences=True` is used here).
