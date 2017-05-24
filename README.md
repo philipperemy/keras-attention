@@ -79,6 +79,8 @@ We consider the same example as the one used for the Dense layers. The attention
 
 Both have their own advantages and disadvantages. One obvious advantage of applying the attention directly at the inputs is that we clearly understand this space. The high dimensional space spanned by the LSTM might be a bit trickier to interpret, although they share the time steps in common with the inputs (`return_sequences=True` is used here).
 
-
+## Resources
+- https://github.com/fchollet/keras/issues/1472
+- http://distill.pub/2016/augmented-rnns/
 
 
