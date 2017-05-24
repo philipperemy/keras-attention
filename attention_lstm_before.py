@@ -30,7 +30,7 @@ def build_recurrent_model():
 
 if __name__ == '__main__':
 
-    N = 100000
+    N = 300000
     inputs_1, outputs = get_data_recurrent(N, time_steps, input_dim)
 
     m = build_recurrent_model()
@@ -40,7 +40,7 @@ if __name__ == '__main__':
     m.fit([inputs_1], outputs, epochs=1, batch_size=64, validation_split=0.1)
 
     attention_vectors = []
-    for i in range(100):
+    for i in range(300):
         testing_inputs_1, testing_outputs = get_data_recurrent(1, time_steps, input_dim)
         attention_vector = get_activations(m, testing_inputs_1, print_shape_only=True)[3].flatten()
         print('attention =', attention_vector)
