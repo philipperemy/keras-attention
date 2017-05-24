@@ -23,6 +23,9 @@ We expect the attention to be focused on *v[1]* only, or at least strongly. We r
   <img src="assets/attention_1.png" width="400">
 </p>
 
+
+The first two are samples taken randomly from the training set. The last plot is the attention vector that we expect. A high peak indexed by 1, and close to zero on the rest.
+
 Let's train this model and visualize the attention vector applied to the inputs:
 
 <p align="center">
@@ -41,7 +44,7 @@ attention_probs = Dense(input_dims, activation='softmax', name='attention_probs'
 attention_mul = merge([inputs, attention_probs], output_shape=32, name='attention_mul', mode='mul')
 ```
 
-We apply a `Dense - Softmax` layer with the same number of output parameters than the `Input` layer. The attention matrix has a shape of `input_dims x 32` here.
+We apply a `Dense - Softmax` layer with the same number of output parameters than the `Input` layer. The attention matrix has a shape of `input_dims x input_dims` here.
 
 Then we merge the `Inputs` layer with the attention layer by multiplying element-wise.
 
