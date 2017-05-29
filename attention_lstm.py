@@ -8,7 +8,7 @@ from attention_utils import get_activations, get_data_recurrent
 INPUT_DIM = 2
 TIME_STEPS = 20
 # if True, the attention vector is shared across the input_dimensions where the attention is applied.
-SINGLE_ATTENTION_VECTOR = True
+SINGLE_ATTENTION_VECTOR = False
 APPLY_ATTENTION_BEFORE_LSTM = False
 
 
@@ -34,7 +34,7 @@ def model_attention_applied_after_lstm():
     lstm_out = LSTM(lstm_units, return_sequences=True)(inputs)
 
     # ATTENTION PART STARTS HERE
-    attention_mul = attention_block(lstm_out, lstm_units)
+    attention_mul = attention_block(lstm_out)
     # a = Permute((2, 1))(lstm_out)
     # a = Reshape((lstm_units, TIME_STEPS))(a)
     # a = Dense(TIME_STEPS, activation='softmax')(a)
@@ -58,7 +58,7 @@ def model_attention_applied_before_lstm():
     lstm_units = 32
 
     # ATTENTION PART STARTS HERE
-    attention_mul = attention_block(inputs, INPUT_DIM)
+    attention_mul = attention_block(inputs)
     # a = Permute((2, 1))(inputs)
     # a = Reshape((INPUT_DIM, TIME_STEPS))(a)
     # a = Dense(TIME_STEPS, activation='softmax')(a)
