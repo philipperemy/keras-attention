@@ -9,7 +9,7 @@ Simple attention mechanism implemented in Keras for the following layers:
 ```
 inputs = Input(shape=(input_dims,))
 attention_probs = Dense(input_dims, activation='softmax', name='attention_probs')(inputs)
-attention_mul = merge([inputs, attention_probs], output_shape=32, name='attention_mul', mode='mul')
+attention_mul = merge([inputs, attention_probs], output_shape=input_dims, name='attention_mul', mode='mul')
 ```
 
 Let's consider this Hello World example:
@@ -63,7 +63,24 @@ Where `1` is the index of definition of the attention layer in the model definit
 
 We consider the same example as the one used for the Dense layers. The attention index is now on the 10th value. We therefore expect an attention spike around this value. There are two main ways to apply attention to recurrent layers:
 
-- Directly at the inputs (same as the Dense example above): `attention_lstm_before.py`
-- After the LSTM layer: `attention_lstm_before.py`
+- Directly on the inputs (same as the Dense example above): `attention_lstm_before.py`
+
+<p align="center">
+  <b>Attention vector applied on the inputs (before)</b><br><br>
+  <img src="assets/lstm_before.png" width="500">
+</p>
+
+- After the LSTM layer: `attention_lstm_after.py`
+
+<p align="center">
+  <b>Attention vector applied on the output of the LSTM layer (after)</b><br><br>
+  <img src="assets/lstm_after.png" width="500">
+</p>
 
 Both have their own advantages and disadvantages. One obvious advantage of applying the attention directly at the inputs is that we clearly understand this space. The high dimensional space spanned by the LSTM might be a bit trickier to interpret, although they share the time steps in common with the inputs (`return_sequences=True` is used here).
+
+## Resources
+- https://github.com/fchollet/keras/issues/1472
+- http://distill.pub/2016/augmented-rnns/
+
+
