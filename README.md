@@ -9,7 +9,7 @@ Simple attention mechanism implemented in Keras for the following layers:
 ```
 inputs = Input(shape=(input_dims,))
 attention_probs = Dense(input_dims, activation='softmax', name='attention_probs')(inputs)
-attention_mul = merge([inputs, attention_probs], output_shape=32, name='attention_mul', mode='mul')
+attention_mul = merge([inputs, attention_probs], output_shape=input_dims, name='attention_mul', mode='mul')
 ```
 
 Let's consider this Hello World example:
