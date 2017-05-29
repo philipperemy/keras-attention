@@ -8,26 +8,67 @@ from attention_utils import get_activations, get_data_recurrent
 INPUT_DIM = 2
 TIME_STEPS = 20
 # if True, the attention vector is shared across the input_dimensions where the attention is applied.
-SINGLE_ATTENTION_VECTOR = False
+SINGLE_ATTENTION_VECTOR = True
+APPLY_ATTENTION_BEFORE_LSTM = False
 
 
-def build_recurrent_model(single_attention_vector=False):
-    inputs = Input(shape=(TIME_STEPS, INPUT_DIM,))
-
-    # ATTENTION PART STARTS HERE
+def attention_block(inputs, inputs_units):
     a = Permute((2, 1))(inputs)
-    a = Reshape((INPUT_DIM, TIME_STEPS))(a)
+    a = Reshape((inputs_units, TIME_STEPS))(a)
     a = Dense(TIME_STEPS, activation='softmax')(a)
-    if single_attention_vector:
+    if SINGLE_ATTENTION_VECTOR:
         a = Lambda(lambda x: K.mean(x, axis=1), name='attention_vec')(a)  # this is the attention vector!
-        a = RepeatVector(INPUT_DIM)(a)
+        a = RepeatVector(inputs_units)(a)
     else:
         a = Lambda(lambda x: x, name='attention_vec')(a)  # trick to name a layer.
     a_probs = Permute((2, 1))(a)
     attention_mul = merge([inputs, a_probs], name='attention_mul', mode='mul')
+    return attention_mul
+
+
+def model_attention_applied_after_lstm():
+    inputs = Input(shape=(TIME_STEPS, INPUT_DIM,))
+    lstm_units = 32
+    lstm_out = LSTM(lstm_units, return_sequences=True)(inputs)
+
+    # ATTENTION PART STARTS HERE
+    attention_mul = attention_block(lstm_out, lstm_units)
+    # a = Permute((2, 1))(lstm_out)
+    # a = Reshape((lstm_units, TIME_STEPS))(a)
+    # a = Dense(TIME_STEPS, activation='softmax')(a)
+    # if SINGLE_ATTENTION_VECTOR:
+    #     a = Lambda(lambda x: K.mean(x, axis=1), name='attention_vec')(a)  # this is the attention vector!
+    #     a = RepeatVector(lstm_units)(a)
+    # else:
+    #     a = Lambda(lambda x: x, name='attention_vec')(a)  # trick to name a layer.
+    # a_probs = Permute((2, 1))(a)
+    # attention_mul = merge([lstm_out, a_probs], name='attention_mul', mode='mul')
     # ATTENTION PART FINISHES HERE
 
+    attention_mul = Flatten()(attention_mul)
+    output = Dense(1, activation='sigmoid')(attention_mul)
+    model = Model(input=[inputs], output=output)
+    return model
+
+
+def model_attention_applied_before_lstm():
+    inputs = Input(shape=(TIME_STEPS, INPUT_DIM,))
     lstm_units = 32
+
+    # ATTENTION PART STARTS HERE
+    attention_mul = attention_block(inputs, INPUT_DIM)
+    # a = Permute((2, 1))(inputs)
+    # a = Reshape((INPUT_DIM, TIME_STEPS))(a)
+    # a = Dense(TIME_STEPS, activation='softmax')(a)
+    # if SINGLE_ATTENTION_VECTOR:
+    #     a = Lambda(lambda x: K.mean(x, axis=1), name='attention_vec')(a)  # this is the attention vector!
+    #     a = RepeatVector(INPUT_DIM)(a)
+    # else:
+    #     a = Lambda(lambda x: x, name='attention_vec')(a)  # trick to name a layer.
+    # a_probs = Permute((2, 1))(a)
+    # attention_mul = merge([inputs, a_probs], name='attention_mul', mode='mul')
+    # ATTENTION PART FINISHES HERE
+
     attention_mul = LSTM(lstm_units, return_sequences=False)(attention_mul)
     output = Dense(1, activation='sigmoid')(attention_mul)
     model = Model(input=[inputs], output=output)
@@ -40,7 +81,11 @@ if __name__ == '__main__':
     # N = 300 -> too few = no training
     inputs_1, outputs = get_data_recurrent(N, TIME_STEPS, INPUT_DIM)
 
-    m = build_recurrent_model()
+    if APPLY_ATTENTION_BEFORE_LSTM:
+        m = model_attention_applied_after_lstm()
+    else:
+        m = model_attention_applied_before_lstm()
+
     m.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
     print(m.summary())
 
