@@ -12,18 +12,20 @@ SINGLE_ATTENTION_VECTOR = True
 APPLY_ATTENTION_BEFORE_LSTM = False
 
 
-def attention_block(inputs, inputs_units):
+def attention_block(inputs):
+    # inputs.shape = (batch_size, time_steps, input_dim)
+    input_dim = int(inputs.shape[2])
     a = Permute((2, 1))(inputs)
-    a = Reshape((inputs_units, TIME_STEPS))(a)
+    a = Reshape((input_dim, TIME_STEPS))(a)
     a = Dense(TIME_STEPS, activation='softmax')(a)
     if SINGLE_ATTENTION_VECTOR:
         a = Lambda(lambda x: K.mean(x, axis=1), name='attention_vec')(a)  # this is the attention vector!
-        a = RepeatVector(inputs_units)(a)
+        a = RepeatVector(input_dim)(a)
     else:
         a = Lambda(lambda x: x, name='attention_vec')(a)  # trick to name a layer.
     a_probs = Permute((2, 1))(a)
-    attention_mul = merge([inputs, a_probs], name='attention_mul', mode='mul')
-    return attention_mul
+    output_attention_mul = merge([inputs, a_probs], name='attention_mul', mode='mul')
+    return output_attention_mul
 
 
 def model_attention_applied_after_lstm():
