@@ -5,18 +5,24 @@ from keras.models import *
 
 from attention_utils import get_activations, get_data_recurrent
 
-input_dim = 2
-time_steps = 20
+INPUT_DIM = 2
+TIME_STEPS = 20
+# if True, the attention vector is shared across the input_dimensions where the attention is applied.
+SINGLE_ATTENTION_VECTOR = False
 
 
-def build_recurrent_model():
-    inputs = Input(shape=(time_steps, input_dim,))
+def build_recurrent_model(single_attention_vector=False):
+    inputs = Input(shape=(TIME_STEPS, INPUT_DIM,))
 
     # ATTENTION PART STARTS HERE
     a = Permute((2, 1))(inputs)
-    a = Dense(time_steps, activation='softmax')(a)
-    a = Lambda(lambda x: K.mean(x, axis=1))(a)  # this is the attention vector!
-    a = RepeatVector(input_dim)(a)
+    a = Reshape((INPUT_DIM, TIME_STEPS))(a)
+    a = Dense(TIME_STEPS, activation='softmax')(a)
+    if single_attention_vector:
+        a = Lambda(lambda x: K.mean(x, axis=1), name='attention_vec')(a)  # this is the attention vector!
+        a = RepeatVector(INPUT_DIM)(a)
+    else:
+        a = Lambda(lambda x: x, name='attention_vec')(a)  # trick to name a layer.
     a_probs = Permute((2, 1))(a)
     attention_mul = merge([inputs, a_probs], name='attention_mul', mode='mul')
     # ATTENTION PART FINISHES HERE
@@ -31,7 +37,8 @@ def build_recurrent_model():
 if __name__ == '__main__':
 
     N = 300000
-    inputs_1, outputs = get_data_recurrent(N, time_steps, input_dim)
+    # N = 300 -> too few = no training
+    inputs_1, outputs = get_data_recurrent(N, TIME_STEPS, INPUT_DIM)
 
     m = build_recurrent_model()
     m.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
@@ -41,9 +48,13 @@ if __name__ == '__main__':
 
     attention_vectors = []
     for i in range(300):
-        testing_inputs_1, testing_outputs = get_data_recurrent(1, time_steps, input_dim)
-        attention_vector = get_activations(m, testing_inputs_1, print_shape_only=True)[3].flatten()
+        testing_inputs_1, testing_outputs = get_data_recurrent(1, TIME_STEPS, INPUT_DIM)
+        attention_vector = np.mean(get_activations(m,
+                                                   testing_inputs_1,
+                                                   print_shape_only=True,
+                                                   layer_name='attention_vec')[0], axis=1).squeeze()
         print('attention =', attention_vector)
+        assert (np.sum(attention_vector) - 1.0) < 1e-5
         attention_vectors.append(attention_vector)
 
     attention_vector_final = np.mean(np.array(attention_vectors), axis=0)

@@ -5,11 +5,11 @@ from keras.models import *
 
 from attention_utils import get_activations, get_data_recurrent
 
-input_dim = 1
+input_dim = 2
 time_steps = 20
 
 
-def build_recurrent_model():
+def build_recurrent_model(single_attention_vector=True):
     inputs = Input(shape=(time_steps, input_dim,))
     lstm_units = 32
     lstm_out = LSTM(lstm_units, return_sequences=True)(inputs)
@@ -18,6 +18,9 @@ def build_recurrent_model():
     a = Permute((2, 1))(lstm_out)
     a = Reshape((lstm_units, time_steps))(a)
     a = Dense(time_steps, activation='softmax')(a)
+    if single_attention_vector:
+        a = Lambda(lambda x: K.mean(x, axis=1))(a)  # this is the attention vector!
+        a = RepeatVector(lstm_units)(a)
     a_probs = Permute((2, 1))(a)
     attention_mul = merge([lstm_out, a_probs], name='attention_mul', mode='mul')
     # ATTENTION PART FINISHES HERE

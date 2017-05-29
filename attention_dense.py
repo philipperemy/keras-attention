@@ -5,14 +5,14 @@ np.random.seed(1337)  # for reproducibility
 from keras.models import *
 from keras.layers import Input, Dense, merge
 
-input_dims = 32
+input_dim = 32
 
 
 def build_model():
-    inputs = Input(shape=(input_dims,))
+    inputs = Input(shape=(input_dim,))
 
     # ATTENTION PART STARTS HERE
-    attention_probs = Dense(input_dims, activation='softmax', name='attention_probs')(inputs)
+    attention_probs = Dense(input_dim, activation='softmax', name='attention_probs')(inputs)
     attention_mul = merge([inputs, attention_probs], output_shape=32, name='attention_mul', mode='mul')
     # ATTENTION PART FINISHES HERE
 
@@ -24,7 +24,7 @@ def build_model():
 
 if __name__ == '__main__':
     N = 10000
-    inputs_1, outputs = get_data(N)
+    inputs_1, outputs = get_data(N, input_dim)
 
     m = build_model()
     m.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
@@ -32,7 +32,7 @@ if __name__ == '__main__':
 
     m.fit([inputs_1], outputs, epochs=20, batch_size=64, validation_split=0.5)
 
-    testing_inputs_1, testing_outputs = get_data(1, input_dims)
+    testing_inputs_1, testing_outputs = get_data(1, input_dim)
 
     # Attention vector corresponds to the second matrix.
     # The first one is the Inputs output.
