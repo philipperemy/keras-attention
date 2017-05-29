@@ -5,7 +5,7 @@ from keras.models import *
 
 from attention_utils import get_activations, get_data_recurrent
 
-input_dim = 1
+input_dim = 2
 time_steps = 20
 
 
@@ -15,7 +15,7 @@ def build_recurrent_model():
     # ATTENTION PART STARTS HERE
     a = Permute((2, 1))(inputs)
     a = Dense(time_steps, activation='softmax')(a)
-    a = Reshape((time_steps,))(a)  # this is the vector!
+    a = Lambda(lambda x: K.mean(x, axis=1))(a)  # this is the attention vector!
     a = RepeatVector(input_dim)(a)
     a_probs = Permute((2, 1))(a)
     attention_mul = merge([inputs, a_probs], name='attention_mul', mode='mul')
