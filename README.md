@@ -90,7 +90,7 @@ Also, sometimes, the time series can be N-dimensional. It could be interesting t
 - `SINGLE_ATTENTION_VECTOR = False`
 
 <p align="center">
-  <b>Attention unique per time series</b><br><br>
+  <b>Attention defined per time series (each TS has its own attention)</b><br><br>
   <img src="assets/graph_multi_attention.png" width="500">
 </p>
 
