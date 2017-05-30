@@ -1,4 +1,4 @@
-# Keras Attention Mechanism (Hello World)
+# Keras Attention Mechanism
 Simple attention mechanism implemented in Keras for the following layers:
 
 - [x] **Dense**
