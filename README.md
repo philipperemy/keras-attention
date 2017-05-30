@@ -1,8 +1,8 @@
 # Keras Attention Mechanism
 Simple attention mechanism implemented in Keras for the following layers:
 
-- [x] **Dense**
-- [x] **LSTM, GRU**
+- [x] **Dense (attention 2D block)**
+- [x] **LSTM, GRU (attention 3D block)**
 
 ## Dense Layer
 
