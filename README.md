@@ -61,6 +61,8 @@ Where `1` is the index of definition of the attention layer in the model definit
 
 ## Recurrent Layers (LSTM, GRU...)
 
+### Application of attention at input level
+
 We consider the same example as the one used for the Dense layers. The attention index is now on the 10th value. We therefore expect an attention spike around this value. There are two main ways to apply attention to recurrent layers:
 
 - Directly on the inputs (same as the Dense example above): `APPLY_ATTENTION_BEFORE_LSTM = True`
@@ -69,6 +71,8 @@ We consider the same example as the one used for the Dense layers. The attention
   <b>Attention vector applied on the inputs (before)</b><br><br>
   <img src="assets/lstm_before.png" width="500">
 </p>
+
+### Application of attention on the LSTM's output
 
 - After the LSTM layer: `APPLY_ATTENTION_BEFORE_LSTM = False`
 
@@ -79,7 +83,23 @@ We consider the same example as the one used for the Dense layers. The attention
 
 Both have their own advantages and disadvantages. One obvious advantage of applying the attention directly at the inputs is that we clearly understand this space. The high dimensional space spanned by the LSTM might be a bit trickier to interpret, although they share the time steps in common with the inputs (`return_sequences=True` is used here).
 
+### Attention of multi dimensional time series
+
 Also, sometimes, the time series can be N-dimensional. It could be interesting to have one attention vector per dimension. Let's say we have a 2-D time series on 20 steps. Setting `SINGLE_ATTENTION_VECTOR = False` gives an attention vector of shape `(20, 2)`. If `SINGLE_ATTENTION_VECTOR` is set to `True`, it means that the attention vector will be of shape `(20,)` and shared across the input dimensions.
+
+- `SINGLE_ATTENTION_VECTOR = False`
+
+<p align="center">
+  <b>Attention unique per time series</b><br><br>
+  <img src="assets/graph_multi_attention.png" width="500">
+</p>
+
+- `SINGLE_ATTENTION_VECTOR = True`
+
+<p align="center">
+  <b>Attention shared across all the time series</b><br><br>
+  <img src="assets/graph_single_attention.png" width="500">
+</p>
 
 ## Resources
 - https://github.com/fchollet/keras/issues/1472
