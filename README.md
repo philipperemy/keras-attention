@@ -4,6 +4,11 @@ Simple attention mechanism implemented in Keras for the following layers:
 - [x] **Dense (attention 2D block)**
 - [x] **LSTM, GRU (attention 3D block)**
 
+<p align="center">
+  <img src="assets/graph_multi_attention.png" width="100">
+  <br><i>Example: Attention block</i>
+</p>
+
 ## Dense Layer
 
 ```
