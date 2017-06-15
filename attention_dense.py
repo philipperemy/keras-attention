@@ -1,4 +1,5 @@
 import numpy as np
+
 from attention_utils import get_activations, get_data
 
 np.random.seed(1337)  # for reproducibility
@@ -12,7 +13,7 @@ def build_model():
     inputs = Input(shape=(input_dim,))
 
     # ATTENTION PART STARTS HERE
-    attention_probs = Dense(input_dim, activation='softmax', name='attention_probs')(inputs)
+    attention_probs = Dense(input_dim, activation='softmax', name='attention_vec')(inputs)
     attention_mul = merge([inputs, attention_probs], output_shape=32, name='attention_mul', mode='mul')
     # ATTENTION PART FINISHES HERE
 
@@ -36,7 +37,9 @@ if __name__ == '__main__':
 
     # Attention vector corresponds to the second matrix.
     # The first one is the Inputs output.
-    attention_vector = get_activations(m, testing_inputs_1, print_shape_only=True)[1].flatten()
+    attention_vector = get_activations(m, testing_inputs_1,
+                                       print_shape_only=True,
+                                       layer_name='attention_vec')[0].flatten()
     print('attention =', attention_vector)
 
     # plot part.
