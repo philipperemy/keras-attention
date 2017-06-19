@@ -19,11 +19,9 @@ def attention_3d_block(inputs):
     a = Reshape((input_dim, TIME_STEPS))(a)
     a = Dense(TIME_STEPS, activation='softmax')(a)
     if SINGLE_ATTENTION_VECTOR:
-        a = Lambda(lambda x: K.mean(x, axis=1), name='attention_vec')(a)  # this is the attention vector!
+        a = Lambda(lambda x: K.mean(x, axis=1), name='dim_reduction')(a)
         a = RepeatVector(input_dim)(a)
-    else:
-        a = Lambda(lambda x: x, name='attention_vec')(a)  # trick to name a layer.
-    a_probs = Permute((2, 1))(a)
+    a_probs = Permute((2, 1), name='attention_vec')(a)
     output_attention_mul = merge([inputs, a_probs], name='attention_mul', mode='mul')
     return output_attention_mul
 
@@ -71,7 +69,7 @@ if __name__ == '__main__':
         attention_vector = np.mean(get_activations(m,
                                                    testing_inputs_1,
                                                    print_shape_only=True,
-                                                   layer_name='attention_vec')[0], axis=1).squeeze()
+                                                   layer_name='attention_vec')[0], axis=2).squeeze()
         print('attention =', attention_vector)
         assert (np.sum(attention_vector) - 1.0) < 1e-5
         attention_vectors.append(attention_vector)
