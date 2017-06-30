@@ -1,4 +1,6 @@
 # Keras Attention Mechanism
+[![license](https://img.shields.io/badge/License-Apache_2.0-brightgreen.svg)](https://github.com/philipperemy/keras-attention-mechanism/blob/master/LICENSE)
+
 Simple attention mechanism implemented in Keras for the following layers:
 
 - [x] **Dense (attention 2D block)**
