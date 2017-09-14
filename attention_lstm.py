@@ -54,9 +54,9 @@ if __name__ == '__main__':
     inputs_1, outputs = get_data_recurrent(N, TIME_STEPS, INPUT_DIM)
 
     if APPLY_ATTENTION_BEFORE_LSTM:
-        m = model_attention_applied_after_lstm()
-    else:
         m = model_attention_applied_before_lstm()
+    else:
+        m = model_attention_applied_after_lstm()
 
     m.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
     print(m.summary())
