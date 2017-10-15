@@ -16,7 +16,7 @@ def attention_3d_block(inputs):
     # inputs.shape = (batch_size, time_steps, input_dim)
     input_dim = int(inputs.shape[2])
     a = Permute((2, 1))(inputs)
-    a = Reshape((input_dim, TIME_STEPS))(a)
+    a = Reshape((input_dim, TIME_STEPS))(a) # this line is not useful. It's just to know which dimension is what.
     a = Dense(TIME_STEPS, activation='softmax')(a)
     if SINGLE_ATTENTION_VECTOR:
         a = Lambda(lambda x: K.mean(x, axis=1), name='dim_reduction')(a)
