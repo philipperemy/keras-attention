@@ -1,4 +1,4 @@
-Keras==2.0.2
+Keras==2.2.4
 matplotlib==2.0.0
 numpy==1.13.0
 pandas==0.18.1
