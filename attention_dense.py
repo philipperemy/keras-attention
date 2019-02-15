@@ -3,8 +3,8 @@ import numpy as np
 from attention_utils import get_activations, get_data
 
 np.random.seed(1337)  # for reproducibility
-from keras.models import *
-from keras.layers import Input, Dense, merge
+from tensorflow.keras.models import *
+from tensorflow.keras.layers import Input, Dense, Multiply
 
 input_dim = 32
 
@@ -14,12 +14,13 @@ def build_model():
 
     # ATTENTION PART STARTS HERE
     attention_probs = Dense(input_dim, activation='softmax', name='attention_vec')(inputs)
-    attention_mul = merge([inputs, attention_probs], output_shape=32, name='attention_mul', mode='mul')
+    # attention_mul = merge([inputs, attention_probs], output_shape=32, name='attention_mul', mode='mul')
+    attention_mul = Multiply(name='attention_mul')([inputs, attention_probs])
     # ATTENTION PART FINISHES HERE
 
     attention_mul = Dense(64)(attention_mul)
     output = Dense(1, activation='sigmoid')(attention_mul)
-    model = Model(input=[inputs], output=output)
+    model = Model(inputs=[inputs], outputs=output)
     return model
 
 

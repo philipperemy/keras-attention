@@ -1,15 +1,18 @@
-from keras.layers import merge
-from keras.layers.core import *
-from keras.layers.recurrent import LSTM
-from keras.models import *
+from tensorflow.keras.layers import (
+    Multiply, LSTM, Input, Permute, Reshape, Dense,
+    Flatten, Lambda, RepeatVector,
+)
+from tensorflow.keras.models import Model
 
 from attention_utils import get_activations, get_data_recurrent
+
+import numpy as np
 
 INPUT_DIM = 2
 TIME_STEPS = 20
 # if True, the attention vector is shared across the input_dimensions where the attention is applied.
 SINGLE_ATTENTION_VECTOR = False
-APPLY_ATTENTION_BEFORE_LSTM = False
+APPLY_ATTENTION_BEFORE_LSTM = True
 
 
 def attention_3d_block(inputs):
@@ -22,7 +25,8 @@ def attention_3d_block(inputs):
         a = Lambda(lambda x: K.mean(x, axis=1), name='dim_reduction')(a)
         a = RepeatVector(input_dim)(a)
     a_probs = Permute((2, 1), name='attention_vec')(a)
-    output_attention_mul = merge([inputs, a_probs], name='attention_mul', mode='mul')
+    # output_attention_mul = merge([inputs, a_probs], name='attention_mul', mode='mul')
+    output_attention_mul = Multiply(name='attention_mul')([inputs, a_probs])
     return output_attention_mul
 
 
@@ -33,7 +37,7 @@ def model_attention_applied_after_lstm():
     attention_mul = attention_3d_block(lstm_out)
     attention_mul = Flatten()(attention_mul)
     output = Dense(1, activation='sigmoid')(attention_mul)
-    model = Model(input=[inputs], output=output)
+    model = Model(inputs=[inputs], outputs=output)
     return model
 
 
@@ -43,7 +47,7 @@ def model_attention_applied_before_lstm():
     lstm_units = 32
     attention_mul = LSTM(lstm_units, return_sequences=False)(attention_mul)
     output = Dense(1, activation='sigmoid')(attention_mul)
-    model = Model(input=[inputs], output=output)
+    model = Model(inputs=[inputs], outputs=output)
     return model
 
 
