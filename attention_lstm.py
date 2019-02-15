@@ -12,7 +12,7 @@ INPUT_DIM = 2
 TIME_STEPS = 20
 # if True, the attention vector is shared across the input_dimensions where the attention is applied.
 SINGLE_ATTENTION_VECTOR = False
-APPLY_ATTENTION_BEFORE_LSTM = True
+APPLY_ATTENTION_BEFORE_LSTM = False
 
 
 def attention_3d_block(inputs):
@@ -25,7 +25,6 @@ def attention_3d_block(inputs):
         a = Lambda(lambda x: K.mean(x, axis=1), name='dim_reduction')(a)
         a = RepeatVector(input_dim)(a)
     a_probs = Permute((2, 1), name='attention_vec')(a)
-    # output_attention_mul = merge([inputs, a_probs], name='attention_mul', mode='mul')
     output_attention_mul = Multiply(name='attention_mul')([inputs, a_probs])
     return output_attention_mul
 

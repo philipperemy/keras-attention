@@ -14,7 +14,6 @@ def build_model():
 
     # ATTENTION PART STARTS HERE
     attention_probs = Dense(input_dim, activation='softmax', name='attention_vec')(inputs)
-    # attention_mul = merge([inputs, attention_probs], output_shape=32, name='attention_mul', mode='mul')
     attention_mul = Multiply(name='attention_mul')([inputs, attention_probs])
     # ATTENTION PART FINISHES HERE
 
