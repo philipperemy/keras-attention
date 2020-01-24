@@ -1,4 +1,6 @@
-Keras==2.0.2
-matplotlib==2.0.0
-numpy==1.13.0
-pandas==0.18.1
+Keras
+matplotlib
+numpy
+pandas
+tensorflow
+keract
