@@ -1,4 +1,4 @@
-from tensorflow_core.python.keras.layers import Dense, Lambda, dot, Activation, concatenate
+from tensorflow.keras.layers import Dense, Lambda, dot, Activation, concatenate
 
 
 def attention_3d_block(hidden_states):

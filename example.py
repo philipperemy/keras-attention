@@ -46,7 +46,7 @@ def main():
     m = get_model()
     m.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 
-    m.fit(x=[inputs], y=outputs, epochs=1, batch_size=64, validation_split=0)
+    m.fit(x=[inputs], y=outputs, epochs=2, batch_size=64, validation_split=0)
 
     num_simulations = 10
     attention_vectors = np.zeros(shape=(num_simulations, TIME_STEPS))
