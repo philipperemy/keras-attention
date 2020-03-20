@@ -15,12 +15,14 @@ from tensorflow.keras.layers import LSTM
 from keras_attention import attention_3d_block
 
 
-def add_two_numbers_after_0(n: int, seq_length: int, index_1: int = None, index_2: int = None) -> (np.array, np.array):
+def task_add_two_numbers_after_delimiter(n: int, seq_length: int, delimiter: float = 0.0,
+                                         index_1: int = None, index_2: int = None) -> (np.array, np.array):
     """
-    Task: Add the two numbers that come right after an exact 0.0.
+    Task: Add the two numbers that come right after the delimiter.
     x = [1, 2, 3, 0, 4, 5, 6, 0, 7, 8]. Result is y = 4 + 7 = 11.
     @param n: number of samples in (x, y).
     @param seq_length: length of the sequence of x.
+    @param delimiter: value of the delimiter. Default is 0.0
     @param index_1: index of the number that comes after the first 0.
     @param index_2: index of the number that comes after the second 0.
     @return: returns two numpy.array x and y of shape (n, seq_length, 1) and (n, 1).
@@ -33,8 +35,8 @@ def add_two_numbers_after_0(n: int, seq_length: int, index_1: int = None, index_
         else:
             a, b = index_1, index_2
         y[i] = 0.5 * x[i, a:a + 1] + 0.5 * x[i, b:b + 1]
-        x[i, a - 1:a] = 0.0
-        x[i, b - 1:b] = 0.0
+        x[i, a - 1:a] = delimiter
+        x[i, b - 1:b] = delimiter
     x = np.expand_dims(x, axis=-1)
     return x, y
 
@@ -44,13 +46,13 @@ def main():
 
     # data. definition of the problem.
     seq_length = 20
-    x_train, y_train = add_two_numbers_after_0(20_000, seq_length)
-    x_val, y_val = add_two_numbers_after_0(4_000, seq_length)
+    x_train, y_train = task_add_two_numbers_after_delimiter(20_000, seq_length)
+    x_val, y_val = task_add_two_numbers_after_delimiter(4_000, seq_length)
 
     # just arbitrary values. it's for visual purposes. easy to see than random values.
     test_index_1 = 4
     test_index_2 = 9
-    x_test, _ = add_two_numbers_after_0(10, seq_length, test_index_1, test_index_2)
+    x_test, _ = task_add_two_numbers_after_delimiter(10, seq_length, test_index_1, test_index_2)
     # x_test_mask is just a mask that, if applied to x_test, would still contain the information to solve the problem.
     # we expect the attention map to look like this mask.
     x_test_mask = np.zeros_like(x_test[..., 0])
@@ -68,7 +70,7 @@ def main():
     model.compile(loss='mse', optimizer='adam')
     print(model.summary())
 
-    output_dir = '../task_add_two_numbers'
+    output_dir = 'task_add_two_numbers'
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
