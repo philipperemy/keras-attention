@@ -13,6 +13,23 @@ Many-to-one attention mechanism for Keras.
 
 ## Examples
 
+### IMDB Dataset
+
+In this experiment, we demonstrate that using attention yields a higher accuracy on the IMDB dataset. We consider two
+LSTM networks: one with this attention layer and the other one with a fully connected layer. Both have the same number
+of parameters for a fair comparison (250K).
+
+Here are the results on 10 epochs for sequences of length 500. 
+
+
+| Measure  | No Attention (250K params) | Attention (250K params) |
+| ------------- | ------------- | ------------- |
+| Test Max Accuracy  | 88.02  | 88.74 |
+| Test Avg Accuracy  | 87.26  | 88.00 |
+
+
+### Adding two numbers
+
 Let's consider the task of adding two numbers that come right after some delimiters (0 in this case):
 
 `x = [1, 2, 3, 0, 4, 5, 6, 0, 7, 8]`. Result is `y = 4 + 7 = 11`.
