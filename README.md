@@ -7,7 +7,7 @@ Simple attention mechanism implemented in Keras for the following layers:
 - [x] **LSTM, GRU (attention 3D block)**
 
 <p align="center">
-  <img src="assets/graph_multi_attention.png" width="100">
+  <img src="staging/assets/graph_multi_attention.png" width="100">
   <br><i>Example: Attention block</i>
 </p>
 
@@ -30,7 +30,7 @@ We expect the attention to be focused on *v[1]* only, or at least strongly. We r
 
 <p align="center">
   <b>Attention Mechanism explained</b><br><br>
-  <img src="assets/attention_1.png" width="400">
+  <img src="staging/assets/attention_1.png" width="400">
 </p>
 
 
@@ -40,7 +40,7 @@ Let's train this model and visualize the attention vector applied to the inputs:
 
 <p align="center">
   <b>Attention Mechanism explained</b><br><br>
-  <img src="assets/1.png" width="500">
+  <img src="staging/assets/1.png" width="500">
 </p>
 
 We can clearly see that the network figures this out for the inference.
@@ -76,7 +76,7 @@ We consider the same example as the one used for the Dense layers. The attention
 
 <p align="center">
   <b>Attention vector applied on the inputs (before)</b><br><br>
-  <img src="assets/lstm_before.png" width="500">
+  <img src="staging/assets/lstm_before.png" width="500">
 </p>
 
 ### Application of attention on the LSTM's output
@@ -85,7 +85,7 @@ We consider the same example as the one used for the Dense layers. The attention
 
 <p align="center">
   <b>Attention vector applied on the output of the LSTM layer (after)</b><br><br>
-  <img src="assets/lstm_after.png" width="500">
+  <img src="staging/assets/lstm_after.png" width="500">
 </p>
 
 Both have their own advantages and disadvantages. One obvious advantage of applying the attention directly at the inputs is that we clearly understand this space. The high dimensional space spanned by the LSTM might be a bit trickier to interpret, although they share the time steps in common with the inputs (`return_sequences=True` is used here).
@@ -98,14 +98,14 @@ Also, sometimes, the time series can be N-dimensional. It could be interesting t
 
 <p align="center">
   <b>Attention defined per time series (each TS has its own attention)</b><br><br>
-  <img src="assets/graph_multi_attention.png" width="500">
+  <img src="staging/assets/graph_multi_attention.png" width="500">
 </p>
 
 - `SINGLE_ATTENTION_VECTOR = True`
 
 <p align="center">
   <b>Attention shared across all the time series</b><br><br>
-  <img src="assets/graph_single_attention.png" width="500">
+  <img src="staging/assets/graph_single_attention.png" width="500">
 </p>
 
 ## Resources
