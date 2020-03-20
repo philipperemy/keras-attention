@@ -2,8 +2,12 @@ from tensorflow.keras.layers import Dense, Lambda, dot, Activation, concatenate
 
 
 def attention_3d_block(hidden_states):
-    # @author: felixhao28.
-    # hidden_states.shape = (batch_size, time_steps, hidden_size)
+    """
+    Many-to-one attention mechanism for Keras.
+    @param hidden_states: 3D tensor with shape (batch_size, time_steps, input_dim).
+    @return: 2D tensor with shape (batch_size, 128)
+    @author: felixhao28.
+    """
     hidden_size = int(hidden_states.shape[2])
     # Inside dense layer
     #              hidden_states            dot               W            =>           score_first_part

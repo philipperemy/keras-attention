@@ -6,7 +6,7 @@ from tensorflow.keras import Input, Model
 from tensorflow.keras.layers import Dense
 from tensorflow.keras.layers import LSTM
 
-from attention import attention_3d_block
+from attention.attention import attention_3d_block
 
 INPUT_DIM = 100
 TIME_STEPS = 20
