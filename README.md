@@ -11,6 +11,19 @@ Many-to-one attention mechanism for Keras.
   <img src="examples/equations.png">
 </p>
 
+## Examples
+
+Task: Add the two numbers that come right after the delimiter.
+`x = [1, 2, 3, 0, 4, 5, 6, 0, 7, 8]`. Result is `y = 4 + 7 = 11`.
+
+Attention is expected to be the highest after the delimiters. An overview of the training is shown below, where the
+top represents the attention map and the bottom is the ground truth i.e. what we would expect. As the training 
+progresses, the model learns the task and the attention map converges to the ground truth.
+
+<p align="center">
+  <img src="examples/attention.gif" width="320">
+</p>
+
 ## References
 
 - https://www.cs.cmu.edu/~./hovy/papers/16HLT-hierarchical-attention-networks.pdf
