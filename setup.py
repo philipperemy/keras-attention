@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='attention',
-    version='2.1',
+    version='2.2',
     description='Keras Attention Many to One',
     author='Philippe Remy',
     license='Apache 2.0',
