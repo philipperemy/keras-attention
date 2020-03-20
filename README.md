@@ -8,7 +8,7 @@ pip install attention
 Many-to-one attention mechanism for Keras.
 
 <p align="center">
-  <img src="examples/equations.png" width="200">
+  <img src="examples/equations.png">
 </p>
 
 ## References
