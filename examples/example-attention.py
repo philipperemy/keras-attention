@@ -52,7 +52,7 @@ def main():
     # just arbitrary values. it's for visual purposes. easy to see than random values.
     test_index_1 = 4
     test_index_2 = 9
-    x_test, _ = task_add_two_numbers_after_delimiter(10, seq_length, test_index_1, test_index_2)
+    x_test, _ = task_add_two_numbers_after_delimiter(10, seq_length, 0, test_index_1, test_index_2)
     # x_test_mask is just a mask that, if applied to x_test, would still contain the information to solve the problem.
     # we expect the attention map to look like this mask.
     x_test_mask = np.zeros_like(x_test[..., 0])
