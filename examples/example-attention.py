@@ -12,7 +12,7 @@ from tensorflow.keras.layers import Dense
 from tensorflow.keras.layers import Dropout
 from tensorflow.keras.layers import LSTM
 
-from keras_attention import attention_3d_block
+from attention import attention_3d_block
 
 
 def task_add_two_numbers_after_delimiter(n: int, seq_length: int, delimiter: float = 0.0,
