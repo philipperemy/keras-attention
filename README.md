@@ -19,13 +19,16 @@ In this experiment, we demonstrate that using attention yields a higher accuracy
 LSTM networks: one with this attention layer and the other one with a fully connected layer. Both have the same number
 of parameters for a fair comparison (250K).
 
-Here are the results on 10 epochs for sequences of length 500. 
+Here are the results on 10 runs. For every run, we record the max accuracy on the test set for 10 epochs. It does not have to be the final accuracy at the end of the training.
 
 
 | Measure  | No Attention (250K params) | Attention (250K params) |
 | ------------- | ------------- | ------------- |
-| Test Max Accuracy  | 88.02  | 88.74 |
-| Test Avg Accuracy  | 87.26  | 88.00 |
+| MAX Accuracy | 88.22 | 88.76 |
+| AVG Accuracy | 87.02 | 87.62 |
+| STDDEV Accuracy | 0.18 | 0.14 |
+
+As expected, there is a boost in accuracy for the model with attention. It also reduces the variability between the runs, which is something nice to have.
 
 
 ### Adding two numbers
