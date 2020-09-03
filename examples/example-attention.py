@@ -7,9 +7,7 @@ import numpy as np
 from keract import get_activations
 from tensorflow.keras import Sequential
 from tensorflow.keras.callbacks import Callback
-from tensorflow.keras.layers import Dense
-from tensorflow.keras.layers import Dropout
-from tensorflow.keras.layers import LSTM
+from tensorflow.keras.layers import Dense, Dropout, LSTM
 
 from attention import Attention
 

@@ -13,11 +13,11 @@ def train_and_evaluate_model_on_imdb(add_attention=True):
     numpy.random.seed(7)
     # load the dataset but only keep the top n words, zero the rest
     top_words = 5000
-    (X_train, y_train), (X_test, y_test) = imdb.load_data(num_words=top_words)
+    (x_train, y_train), (x_test, y_test) = imdb.load_data(num_words=top_words)
     # truncate and pad input sequences
     max_review_length = 500
-    X_train = sequence.pad_sequences(X_train, maxlen=max_review_length)
-    X_test = sequence.pad_sequences(X_test, maxlen=max_review_length)
+    x_train = sequence.pad_sequences(x_train, maxlen=max_review_length)
+    x_test = sequence.pad_sequences(x_test, maxlen=max_review_length)
     # create the model
     embedding_vector_length = 32
 
@@ -47,7 +47,7 @@ def train_and_evaluate_model_on_imdb(add_attention=True):
             self.val_losses.append(logs['val_loss'])
 
     rbta = RecordBestTestAccuracy()
-    model.fit(X_train, y_train, validation_data=(X_test, y_test), epochs=10, batch_size=64, callbacks=[rbta])
+    model.fit(x_train, y_train, validation_data=(x_test, y_test), epochs=10, batch_size=64, callbacks=[rbta])
 
     print(f"Max Test Accuracy: {100 * np.max(rbta.val_accuracies):.2f} %")
     print(f"Mean Test Accuracy: {100 * np.mean(rbta.val_accuracies):.2f} %")
