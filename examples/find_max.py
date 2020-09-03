@@ -44,8 +44,7 @@ def main():
     seq_length = 10
     num_samples = 100000
     # https://stats.stackexchange.com/questions/485784/which-distribution-has-its-maximum-uniformly-distributed
-    # Choose beta(1/N,1) to have max(X_1,...,X_n) ~ U(0, 1).
-    # All that to maximizes entropy (minimizes amount of knowledge).
+    # Choose beta(1/N,1) to have max(X_1,...,X_n) ~ U(0, 1) => minimizes amount of knowledge.
     # If all the max(s) are concentrated around 1, then it makes the task easy for the model.
     x_data = np.random.beta(a=1 / seq_length, b=1, size=(num_samples, seq_length, 1))
     y_data = np.max(x_data, axis=1)
