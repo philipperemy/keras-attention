@@ -31,6 +31,8 @@ m = Sequential([
 
 ## Examples
 
+Install the requirements before running the examples: `pip install -r requirements.txt`.
+
 ### IMDB Dataset
 
 In this experiment, we demonstrate that using attention yields a higher accuracy on the IMDB dataset. We consider two
