@@ -69,6 +69,8 @@ We consider many 1D sequences of the same length. The task is to find the maximu
 
 We give the full sequence processed by the RNN layer to the attention layer. We expect the attention layer to focus on the maximum of each sequence.
 
+After a few epochs, the attention layer converges perfectly to what we expected.
+
 <p align="center">
   <img src="examples/readme/example.png" width="320">
 </p>
