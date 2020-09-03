@@ -5,14 +5,11 @@ import matplotlib.pyplot as plt
 import numpy
 import numpy as np
 from keract import get_activations
-from tensorflow.keras import Input
-from tensorflow.keras import Model
+from tensorflow.keras import Sequential
 from tensorflow.keras.callbacks import Callback
-from tensorflow.keras.layers import Dense
-from tensorflow.keras.layers import Dropout
-from tensorflow.keras.layers import LSTM
+from tensorflow.keras.layers import Dense, Dropout, LSTM
 
-from attention import attention_3d_block
+from attention import Attention
 
 
 def task_add_two_numbers_after_delimiter(n: int, seq_length: int, delimiter: float = 0.0,
@@ -59,14 +56,13 @@ def main():
     x_test_mask[:, test_index_1:test_index_1 + 1] = 1
     x_test_mask[:, test_index_2:test_index_2 + 1] = 1
 
-    # model
-    i = Input(shape=(seq_length, 1))
-    x = LSTM(100, return_sequences=True)(i)
-    x = attention_3d_block(x)
-    x = Dropout(0.2)(x)
-    x = Dense(1, activation='linear')(x)
+    model = Sequential([
+        LSTM(100, input_shape=(seq_length, 1), return_sequences=True),
+        Attention(name='attention_weight'),
+        Dropout(0.2),
+        Dense(1, activation='linear')
+    ])
 
-    model = Model(inputs=[i], outputs=[x])
     model.compile(loss='mse', optimizer='adam')
     print(model.summary())
 
@@ -79,7 +75,7 @@ def main():
     class VisualiseAttentionMap(Callback):
 
         def on_epoch_end(self, epoch, logs=None):
-            attention_map = get_activations(model, x_test, layer_name='attention_weight')['attention_weight']
+            attention_map = get_activations(model, x_test, layer_names='attention_weight')['attention_weight']
 
             # top is attention map.
             # bottom is ground truth.

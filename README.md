@@ -2,17 +2,36 @@
 [![license](https://img.shields.io/badge/License-Apache_2.0-brightgreen.svg)](https://github.com/philipperemy/keras-attention-mechanism/blob/master/LICENSE) [![dep1](https://img.shields.io/badge/Tensorflow-2.0+-brightgreen.svg)](https://www.tensorflow.org/) [![dep2](https://img.shields.io/badge/Keras-2.0+-brightgreen.svg)](https://keras.io/) 
 ![Simple Keras Attention CI](https://github.com/philipperemy/keras-attention-mechanism/workflows/Simple%20Keras%20Attention%20CI/badge.svg)
 
-```
-pip install attention
-```
-
 Many-to-one attention mechanism for Keras.
 
 <p align="center">
-  <img src="examples/equations.png">
+  <img src="examples/equations.png" width="600">
 </p>
 
+
+Installation via pip
+
+```bash
+pip install attention
+```
+
+Import in the source code
+
+```python
+from attention import Attention
+
+# [...]
+
+m = Sequential([
+      LSTM(128, input_shape=(seq_length, 1), return_sequences=True),
+      Attention(name='attention_weight'), # <--------- here.
+      Dense(1, activation='linear')
+])
+```
+
 ## Examples
+
+Install the requirements before running the examples: `pip install -r requirements.txt`.
 
 ### IMDB Dataset
 
@@ -44,6 +63,18 @@ task and the attention map converges to the ground truth.
 
 <p align="center">
   <img src="examples/attention.gif" width="320">
+</p>
+
+### Finding max of a sequence
+
+We consider many 1D sequences of the same length. The task is to find the maximum of each sequence. 
+
+We give the full sequence processed by the RNN layer to the attention layer. We expect the attention layer to focus on the maximum of each sequence.
+
+After a few epochs, the attention layer converges perfectly to what we expected.
+
+<p align="center">
+  <img src="examples/readme/example.png" width="320">
 </p>
 
 ## References

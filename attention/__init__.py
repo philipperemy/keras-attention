@@ -1,1 +1,3 @@
-from attention.attention import attention_3d_block  # noqa
+from attention.attention import Attention  # noqa
+
+VERSION = '3.0'
