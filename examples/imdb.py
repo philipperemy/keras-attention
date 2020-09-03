@@ -1,16 +1,12 @@
 import numpy
 import numpy as np
-from tensorflow.keras import Input
-from tensorflow.keras import Model
+from tensorflow.keras import Sequential
 from tensorflow.keras.callbacks import Callback
 from tensorflow.keras.datasets import imdb
-from tensorflow.keras.layers import Dense
-from tensorflow.keras.layers import Dropout
-from tensorflow.keras.layers import Embedding
-from tensorflow.keras.layers import LSTM
+from tensorflow.keras.layers import Dense, Dropout, Embedding, LSTM
 from tensorflow.keras.preprocessing import sequence
 
-from attention import attention_3d_block
+from attention import Attention
 
 
 def train_and_evaluate_model_on_imdb(add_attention=True):
@@ -24,19 +20,18 @@ def train_and_evaluate_model_on_imdb(add_attention=True):
     X_test = sequence.pad_sequences(X_test, maxlen=max_review_length)
     # create the model
     embedding_vector_length = 32
-    i = Input(shape=(max_review_length,))
-    x = Embedding(top_words, embedding_vector_length, input_length=max_review_length)(i)
-    x = Dropout(0.5)(x)
-    if add_attention:
-        x = LSTM(100, return_sequences=True)(x)
-        x = attention_3d_block(x)
-    else:
-        x = LSTM(100, return_sequences=False)(x)
-        x = Dense(350, activation='relu')(x)  # same number of parameters so fair comparison.
-    x = Dropout(0.5)(x)
-    x = Dense(1, activation='sigmoid')(x)
 
-    model = Model(inputs=[i], outputs=[x])
+    model = Sequential([
+        Embedding(top_words, embedding_vector_length, input_length=max_review_length),
+        Dropout(0.5),
+        # attention vs no attention. same number of parameters so fair comparison.
+        *([LSTM(100, return_sequences=True), Attention()] if add_attention
+          else [LSTM(100), Dense(350, activation='relu')]),
+        Dropout(0.5),
+        Dense(1, activation='sigmoid')
+    ]
+    )
+
     model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
     print(model.summary())
 
