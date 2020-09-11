@@ -24,7 +24,7 @@ from attention import Attention
 
 m = Sequential([
       LSTM(128, input_shape=(seq_length, 1), return_sequences=True),
-      Attention(name='attention_weight'), # <--------- here.
+      Attention(), # <--------- here.
       Dense(1, activation='linear')
 ])
 ```
