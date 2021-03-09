@@ -4,6 +4,10 @@ from tensorflow.keras.layers import Layer
 
 class Attention(Layer):
 
+    def __init__(self, units=128, **kwargs):
+        self.units = units
+        super().__init__(**kwargs)
+
     def __call__(self, inputs):
         """
         Many-to-one attention mechanism for Keras.
@@ -26,5 +30,12 @@ class Attention(Layer):
         # (batch_size, time_steps, hidden_size) dot (batch_size, time_steps) => (batch_size, hidden_size)
         context_vector = Dot(axes=[1, 1], name='context_vector')([hidden_states, attention_weights])
         pre_activation = Concatenate(name='attention_output')([context_vector, h_t])
-        attention_vector = Dense(128, use_bias=False, activation='tanh', name='attention_vector')(pre_activation)
+        attention_vector = Dense(self.units, use_bias=False, activation='tanh', name='attention_vector')(pre_activation)
         return attention_vector
+
+    def get_config(self):
+        return {'units': self.units}
+
+    @classmethod
+    def from_config(cls, config):
+        return cls(**config)

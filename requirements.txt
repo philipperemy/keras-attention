@@ -1,6 +1,0 @@
-Keras
-matplotlib
-numpy
-pandas
-tensorflow
-keract
