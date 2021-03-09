@@ -50,7 +50,7 @@ def main():
     y_data = np.max(x_data, axis=1)
     model = Sequential([
         LSTM(128, input_shape=(seq_length, 1), return_sequences=True),
-        Attention(name='attention_weight'),
+        Attention(),
         Dense(1, activation='linear')
     ])
     model.compile(loss='mae')

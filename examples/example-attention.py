@@ -15,7 +15,7 @@ def main():
     # Define/compile the model.
     model_input = Input(shape=(time_steps, input_dim))
     x = LSTM(64, return_sequences=True)(model_input)
-    x = Attention(32, name='attention_weight')(x)
+    x = Attention(32)(x)
     x = Dense(1)(x)
     model = Model(model_input, x)
     model.compile(loss='mae', optimizer='adam')

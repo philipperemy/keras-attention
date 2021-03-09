@@ -63,7 +63,7 @@ def main():
     # Define/compile the model.
     model_input = Input(shape=(seq_length, 1))
     x = LSTM(100, return_sequences=True)(model_input)
-    x = Attention(name='attention_weight')(x)
+    x = Attention()(x)
     x = Dropout(0.2)(x)
     x = Dense(1, activation='linear')(x)
     model = Model(model_input, x)
@@ -81,7 +81,7 @@ def main():
 
     class VisualiseAttentionMap(Callback):
         def on_epoch_end(self, epoch, logs=None):
-            attention_map = get_activations(model, x_test, layer_names='attention_weight')['attention_weight']
+            attention_map = get_activations(model, x_test)['attention_weight']
             # top is attention map, bottom is ground truth.
             plt.imshow(np.concatenate([attention_map, x_test_mask]), cmap='hot')
             iteration_no = str(epoch).zfill(3)
