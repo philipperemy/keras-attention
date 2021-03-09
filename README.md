@@ -113,4 +113,3 @@ After a few epochs, the attention layer converges perfectly to what we expected.
 - https://www.cs.cmu.edu/~./hovy/papers/16HLT-hierarchical-attention-networks.pdf
 - https://arxiv.org/abs/1508.04025
 - https://arxiv.org/abs/1409.0473
-- https://github.com/philipperemy/keras-attention-mechanism/issues/14
