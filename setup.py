@@ -1,10 +1,8 @@
-from setuptools import setup
-
-from attention import VERSION
+from distutils.core import setup
 
 setup(
     name='attention',
-    version=VERSION,
+    version='4.0',
     description='Keras Simple Attention',
     author='Philippe Remy',
     license='Apache 2.0',
@@ -13,7 +11,6 @@ setup(
     packages=['attention'],
     install_requires=[
         'numpy>=1.18.1',
-        'keras>=2.3.1',
         'tensorflow>=2.1'
     ]
 )

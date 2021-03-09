@@ -1,13 +1,16 @@
-import os
+import shutil
 import sys
+from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy
 import numpy as np
 from keract import get_activations
-from tensorflow.keras import Sequential
+from tensorflow.keras import Input
 from tensorflow.keras.callbacks import Callback
 from tensorflow.keras.layers import Dense, Dropout, LSTM
+from tensorflow.keras.models import load_model, Model
+from tensorflow.python.keras.utils.vis_utils import plot_model
 
 from attention import Attention
 
@@ -40,6 +43,7 @@ def task_add_two_numbers_after_delimiter(n: int, seq_length: int, delimiter: flo
 
 def main():
     numpy.random.seed(7)
+    max_epoch = int(sys.argv[1]) if len(sys.argv) > 1 else 100
 
     # data. definition of the problem.
     seq_length = 20
@@ -56,40 +60,48 @@ def main():
     x_test_mask[:, test_index_1:test_index_1 + 1] = 1
     x_test_mask[:, test_index_2:test_index_2 + 1] = 1
 
-    model = Sequential([
-        LSTM(100, input_shape=(seq_length, 1), return_sequences=True),
-        Attention(name='attention_weight'),
-        Dropout(0.2),
-        Dense(1, activation='linear')
-    ])
+    # Define/compile the model.
+    model_input = Input(shape=(seq_length, 1))
+    x = LSTM(100, input_shape=(seq_length, 1), return_sequences=True)(model_input)
+    x = Attention(name='attention_weight')(x)
+    x = Dropout(0.2)(x)
+    x = Dense(1, activation='linear')(x)
+    model = Model(model_input, x)
+    model.compile(loss='mae', optimizer='adam')
 
-    model.compile(loss='mse', optimizer='adam')
+    # Visualize the model.
     print(model.summary())
+    plot_model(model)
 
-    output_dir = 'task_add_two_numbers'
-    if not os.path.exists(output_dir):
-        os.makedirs(output_dir)
-
-    max_epoch = int(sys.argv[1]) if len(sys.argv) > 1 else 200
+    # Will display the activation map in task_add_two_numbers/
+    output_dir = Path('task_add_two_numbers')
+    if output_dir.exists():
+        shutil.rmtree(str(output_dir))
+    output_dir.mkdir(parents=True, exist_ok=True)
 
     class VisualiseAttentionMap(Callback):
-
         def on_epoch_end(self, epoch, logs=None):
             attention_map = get_activations(model, x_test, layer_names='attention_weight')['attention_weight']
-
-            # top is attention map.
-            # bottom is ground truth.
+            # top is attention map, bottom is ground truth.
             plt.imshow(np.concatenate([attention_map, x_test_mask]), cmap='hot')
-
             iteration_no = str(epoch).zfill(3)
             plt.axis('off')
             plt.title(f'Iteration {iteration_no} / {max_epoch}')
             plt.savefig(f'{output_dir}/epoch_{iteration_no}.png')
             plt.close()
-            plt.clf()
 
-    model.fit(x_train, y_train, validation_data=(x_val, y_val), epochs=max_epoch,
-              batch_size=64, callbacks=[VisualiseAttentionMap()])
+    # train.
+    model.fit(x_train, y_train, validation_data=(x_val, y_val),
+              epochs=max_epoch, verbose=2, batch_size=64,
+              callbacks=[VisualiseAttentionMap()])
+
+    # test save/reload model.
+    pred1 = model.predict(x_val)
+    model.save('test_model.h5')
+    model_h5 = load_model('test_model.h5')
+    pred2 = model_h5.predict(x_val)
+    np.testing.assert_almost_equal(pred1, pred2)
+    print('Success.')
 
 
 if __name__ == '__main__':

@@ -1,19 +1,17 @@
-from tensorflow.keras.layers import Dense, Lambda, dot, Activation, concatenate
+from tensorflow.keras.layers import Dense, Lambda, Dot, Activation, Concatenate
 from tensorflow.keras.layers import Layer
 
 
 class Attention(Layer):
 
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-
-    def __call__(self, hidden_states):
+    def __call__(self, inputs):
         """
         Many-to-one attention mechanism for Keras.
-        @param hidden_states: 3D tensor with shape (batch_size, time_steps, input_dim).
+        @param inputs: 3D tensor with shape (batch_size, time_steps, input_dim).
         @return: 2D tensor with shape (batch_size, 128)
-        @author: felixhao28.
+        @author: felixhao28, philipperemy.
         """
+        hidden_states = inputs
         hidden_size = int(hidden_states.shape[2])
         # Inside dense layer
         #              hidden_states            dot               W            =>           score_first_part
@@ -23,10 +21,10 @@ class Attention(Layer):
         #            score_first_part           dot        last_hidden_state     => attention_weights
         # (batch_size, time_steps, hidden_size) dot   (batch_size, hidden_size)  => (batch_size, time_steps)
         h_t = Lambda(lambda x: x[:, -1, :], output_shape=(hidden_size,), name='last_hidden_state')(hidden_states)
-        score = dot([score_first_part, h_t], [2, 1], name='attention_score')
+        score = Dot(axes=[1, 2], name='attention_score')([h_t, score_first_part])
         attention_weights = Activation('softmax', name='attention_weight')(score)
         # (batch_size, time_steps, hidden_size) dot (batch_size, time_steps) => (batch_size, hidden_size)
-        context_vector = dot([hidden_states, attention_weights], [1, 1], name='context_vector')
-        pre_activation = concatenate([context_vector, h_t], name='attention_output')
+        context_vector = Dot(axes=[1, 1], name='context_vector')([hidden_states, attention_weights])
+        pre_activation = Concatenate(name='attention_output')([context_vector, h_t])
         attention_vector = Dense(128, use_bias=False, activation='tanh', name='attention_vector')(pre_activation)
         return attention_vector
