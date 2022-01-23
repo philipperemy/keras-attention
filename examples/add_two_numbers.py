@@ -1,3 +1,4 @@
+import os
 import shutil
 import sys
 from pathlib import Path
@@ -12,11 +13,21 @@ from tensorflow.keras.layers import Dense, Dropout, LSTM
 from tensorflow.keras.models import load_model, Model
 from tensorflow.python.keras.utils.vis_utils import plot_model
 
+# KERAS_ATTENTION_DEBUG: If set to 1. Will switch to debug mode.
+# In debug mode, the class Attention is no longer a Keras layer.
+# What it means in practice is that we can have access to the internal values
+# of each tensor. If we don't use debug, Keras treats the object
+# as a layer and we can only get the final output.
+
+# In this example we need it because we want to extract all the intermediate output values.
+os.environ['KERAS_ATTENTION_DEBUG'] = '1'
 from attention import Attention
 
 
-def task_add_two_numbers_after_delimiter(n: int, seq_length: int, delimiter: float = 0.0,
-                                         index_1: int = None, index_2: int = None) -> (np.array, np.array):
+def task_add_two_numbers_after_delimiter(
+        n: int, seq_length: int, delimiter: float = 0.0,
+        index_1: int = None, index_2: int = None
+) -> (np.array, np.array):
     """
     Task: Add the two numbers that come right after the delimiter.
     x = [1, 2, 3, 0, 4, 5, 6, 0, 7, 8]. Result is y = 4 + 7 = 11.
@@ -43,7 +54,7 @@ def task_add_two_numbers_after_delimiter(n: int, seq_length: int, delimiter: flo
 
 def main():
     numpy.random.seed(7)
-    max_epoch = int(sys.argv[1]) if len(sys.argv) > 1 else 100
+    max_epoch = int(sys.argv[1]) if len(sys.argv) > 1 else 150
 
     # data. definition of the problem.
     seq_length = 20
@@ -87,13 +98,17 @@ def main():
             iteration_no = str(epoch).zfill(3)
             plt.axis('off')
             plt.title(f'Iteration {iteration_no} / {max_epoch}')
-            plt.savefig(f'{output_dir}/epoch_{iteration_no}.png')
+            output_filename = f'{output_dir}/epoch_{iteration_no}.png'
+            print(f'Saving to {output_filename}.')
+            plt.savefig(output_filename)
             plt.close()
 
     # train.
-    model.fit(x_train, y_train, validation_data=(x_val, y_val),
-              epochs=max_epoch, verbose=2, batch_size=64,
-              callbacks=[VisualiseAttentionMap()])
+    model.fit(
+        x_train, y_train, validation_data=(x_val, y_val),
+        epochs=max_epoch, verbose=2, batch_size=64,
+        callbacks=[VisualiseAttentionMap()]
+    )
 
     # test save/reload model.
     pred1 = model.predict(x_val)
@@ -105,4 +120,6 @@ def main():
 
 
 if __name__ == '__main__':
+    # pip install pydot
+    # pip install keract
     main()
