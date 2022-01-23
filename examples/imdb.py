@@ -29,8 +29,7 @@ def train_and_evaluate_model_on_imdb(add_attention=True):
           else [LSTM(100), Dense(350, activation='relu')]),
         Dropout(0.5),
         Dense(1, activation='sigmoid')
-    ]
-    )
+    ])
 
     model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
     print(model.summary())
@@ -46,11 +45,11 @@ def train_and_evaluate_model_on_imdb(add_attention=True):
             self.val_accuracies.append(logs['val_accuracy'])
             self.val_losses.append(logs['val_loss'])
 
-    rbta = RecordBestTestAccuracy()
-    model.fit(x_train, y_train, validation_data=(x_test, y_test), epochs=10, batch_size=64, callbacks=[rbta])
+    record_callback = RecordBestTestAccuracy()
+    model.fit(x_train, y_train, validation_data=(x_test, y_test), epochs=10, batch_size=64, callbacks=[record_callback])
 
-    print(f"Max Test Accuracy: {100 * np.max(rbta.val_accuracies):.2f} %")
-    print(f"Mean Test Accuracy: {100 * np.mean(rbta.val_accuracies):.2f} %")
+    print(f"Max Test Accuracy: {100 * np.max(record_callback.val_accuracies):.2f} %")
+    print(f"Mean Test Accuracy: {100 * np.mean(record_callback.val_accuracies):.2f} %")
 
 
 def main():
