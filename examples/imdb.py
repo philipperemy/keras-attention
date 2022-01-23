@@ -32,7 +32,7 @@ def train_and_evaluate_model_on_imdb(add_attention=True):
     ])
 
     model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
-    print(model.summary())
+    model.summary()
 
     class RecordBestTestAccuracy(Callback):
 
@@ -46,13 +46,21 @@ def train_and_evaluate_model_on_imdb(add_attention=True):
             self.val_losses.append(logs['val_loss'])
 
     record_callback = RecordBestTestAccuracy()
-    model.fit(x_train, y_train, validation_data=(x_test, y_test), epochs=10, batch_size=64, callbacks=[record_callback])
+    model.fit(
+        x_train, y_train,
+        verbose=2,
+        validation_data=(x_test, y_test),
+        epochs=10,
+        batch_size=64,
+        callbacks=[record_callback]
+    )
 
     print(f"Max Test Accuracy: {100 * np.max(record_callback.val_accuracies):.2f} %")
     print(f"Mean Test Accuracy: {100 * np.mean(record_callback.val_accuracies):.2f} %")
 
 
 def main():
+    # Make sure to run on a GPU!
     # 10 epochs.
     # Max Test Accuracy: 88.02 %
     # Mean Test Accuracy: 87.26 %
