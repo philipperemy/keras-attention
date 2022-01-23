@@ -35,7 +35,7 @@ def main():
     # Define/compile the model.
     model_input = Input(shape=(time_steps, input_dim))
     x = LSTM(64, return_sequences=True)(model_input)
-    x = Attention(32)(x)
+    x = Attention(units=32)(x)
     x = Dense(1)(x)
     model = Model(model_input, x)
     model.compile(loss='mae', optimizer='adam')
@@ -47,7 +47,7 @@ def main():
     # test save/reload model.
     pred1 = model.predict(data_x)
     model.save('test_model.h5')
-    model_h5 = load_model('test_model.h5')
+    model_h5 = load_model('test_model.h5', custom_objects={'Attention': Attention})
     pred2 = model_h5.predict(data_x)
     np.testing.assert_almost_equal(pred1, pred2)
     print('Success.')
