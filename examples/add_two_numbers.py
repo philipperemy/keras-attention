@@ -81,7 +81,7 @@ def main():
     model.compile(loss='mae', optimizer='adam')
 
     # Visualize the model.
-    print(model.summary())
+    model.summary()
     plot_model(model)
 
     # Will display the activation map in task_add_two_numbers/

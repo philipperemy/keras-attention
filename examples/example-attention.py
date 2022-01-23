@@ -19,7 +19,7 @@ def main():
     x = Dense(1)(x)
     model = Model(model_input, x)
     model.compile(loss='mae', optimizer='adam')
-    print(model.summary())
+    model.summary()
 
     # train.
     model.fit(data_x, data_y, epochs=10)
