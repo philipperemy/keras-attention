@@ -11,6 +11,8 @@ Many-to-one attention mechanism for Keras.
 
 ## Installation
 
+*PyPI*
+
 ```bash
 pip install attention
 ```
