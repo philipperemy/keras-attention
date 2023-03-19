@@ -2,8 +2,8 @@ from setuptools import setup, find_packages
 
 setup(
     name='attention',
-    version='4.1',
-    description='Keras Simple Attention',
+    version='5.0.0',
+    description='Keras Attention Layer',
     author='Philippe Remy',
     license='Apache 2.0',
     long_description_content_type='text/markdown',

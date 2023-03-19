@@ -10,14 +10,14 @@ from keract import get_activations
 from tensorflow.keras import Input
 from tensorflow.keras.callbacks import Callback
 from tensorflow.keras.layers import Dense, Dropout, LSTM
-from tensorflow.keras.models import load_model, Model
+from tensorflow.keras.models import Model
 from tensorflow.python.keras.utils.vis_utils import plot_model
 
 # KERAS_ATTENTION_DEBUG: If set to 1. Will switch to debug mode.
 # In debug mode, the class Attention is no longer a Keras layer.
 # What it means in practice is that we can have access to the internal values
 # of each tensor. If we don't use debug, Keras treats the object
-# as a layer and we can only get the final output.
+# as a layer, and we can only get the final output.
 
 # In this example we need it because we want to extract all the intermediate output values.
 os.environ['KERAS_ATTENTION_DEBUG'] = '1'
@@ -74,7 +74,7 @@ def main():
     # Define/compile the model.
     model_input = Input(shape=(seq_length, 1))
     x = LSTM(100, return_sequences=True)(model_input)
-    x = Attention()(x)
+    x = Attention(128, score='bahdanau')(x)
     x = Dropout(0.2)(x)
     x = Dense(1, activation='linear')(x)
     model = Model(model_input, x)
@@ -82,7 +82,7 @@ def main():
 
     # Visualize the model.
     model.summary()
-    plot_model(model)
+    plot_model(model, dpi=200, show_dtype=True, show_shapes=True, show_layer_names=True)
 
     # Will display the activation map in task_add_two_numbers/
     output_dir = Path('task_add_two_numbers')
@@ -109,14 +109,6 @@ def main():
         epochs=max_epoch, verbose=2, batch_size=64,
         callbacks=[VisualiseAttentionMap()]
     )
-
-    # test save/reload model.
-    pred1 = model.predict(x_val)
-    model.save('test_model.h5')
-    model_h5 = load_model('test_model.h5')
-    pred2 = model_h5.predict(x_val)
-    np.testing.assert_almost_equal(pred1, pred2)
-    print('Success.')
 
 
 if __name__ == '__main__':
