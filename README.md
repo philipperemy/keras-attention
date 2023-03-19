@@ -20,9 +20,7 @@ Attention Layer for Keras. Supports the score functions of Luong and Bahdanau.
 pip install attention
 ```
 
-## TCN Layer
-
-### TCN Class
+## Attention Layer
 
 ```python
 Attention(
