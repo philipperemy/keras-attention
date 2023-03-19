@@ -1,4 +1,4 @@
-# Keras Attention Mechanism
+# Keras Attention Layer
 
 [![Downloads](https://pepy.tech/badge/attention)](https://pepy.tech/project/attention)
 [![Downloads](https://pepy.tech/badge/attention/month)](https://pepy.tech/project/attention)
@@ -19,6 +19,39 @@ Many-to-one attention mechanism for Keras.
 ```bash
 pip install attention
 ```
+
+## TCN Layer
+
+### TCN Class
+
+```python
+Attention(
+    units=128,
+    score='luong',
+    **kwargs
+)
+```
+
+### Arguments
+
+- `units`: Integer. The number of units in the attention vector ($a_t$).
+- `score`: String. The score function $score(h_t, \bar{h_s})$. Possible values are `luong` or `bahdanau`.
+
+
+   - Luong's multiplicative style. Link to [paper](https://arxiv.org/abs/1508.04025).
+   - Bahdanau's additive style. Link to [paper](https://arxiv.org/abs/1409.0473).
+
+
+### Input shape
+
+3D tensor with shape `(batch_size, timesteps, input_dim)`.
+
+### Output shape
+
+- 2D tensor with shape `(batch_size, num_units)` ($a_t$).
+
+If you want to visualize the attention weights, refer to this example [examples/add_two_numbers.py](examples/add_two_numbers.py).
+
 
 ## Example
 
