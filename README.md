@@ -7,6 +7,8 @@
 
 Attention Layer for Keras. Supports the score functions of Luong and Bahdanau.
 
+Tested with Tensorflow 2.6, 2.7, 2.8, 2.9, 2.10, 2.11, 2.12 and 2.13 (Jul 25, 2023).
+
 <p align="center">
   <img src="examples/equations.png" width="600">
 </p>
