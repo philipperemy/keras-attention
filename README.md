@@ -3,7 +3,6 @@
 [![Downloads](https://pepy.tech/badge/attention)](https://pepy.tech/project/attention)
 [![Downloads](https://pepy.tech/badge/attention/month)](https://pepy.tech/project/attention)
 [![license](https://img.shields.io/badge/License-Apache_2.0-brightgreen.svg)](https://github.com/philipperemy/keras-attention-mechanism/blob/master/LICENSE) [![dep1](https://img.shields.io/badge/Tensorflow-2.0+-brightgreen.svg)](https://www.tensorflow.org/)
-![Simple Keras Attention CI](https://github.com/philipperemy/keras-attention-mechanism/workflows/Simple%20Keras%20Attention%20CI/badge.svg)
 
 Attention Layer for Keras. Supports the score functions of Luong and Bahdanau.
 
